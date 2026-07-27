@@ -21,3 +21,5 @@ or package has been published.
 - Recorded the Phase 0 decision as `NARROW`.
 - Published the source preview at
   `https://github.com/borborich/provenance-ci`.
+- Updated the full-SHA-pinned checkout dependency to Node.js 24-based
+  `actions/checkout v6.0.2`.

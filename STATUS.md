@@ -34,9 +34,11 @@ out of scope.
   integration passed, SDK/c2patool differential passed, 382-package license
   inventory passed, release smoke passed, and consecutive release packages
   produced the same checksum.
+- First public Ubuntu CI run `30297140231` passed all formatting, clippy,
+  test, Action integration, license, release-build, and smoke-test gates.
 - Local `0.1.0` artifact:
   `dist/provenance-ci-v0.1.0-aarch64-apple-darwin.tar.gz`, SHA-256
-  `64a4ad03647314811397909a9631ba5736c3302d27349531b0987f7c2579a7ee`.
+  `10743470ec200821d5b167ab3d599a860ec51deb0f5b877c88010c1c6bc79bb4`.
 
 ## Publication state
 
@@ -55,12 +57,12 @@ scanner, analytics, billing plan, or external campaign has been created.
 - A declared derivative requires validated `parentOf` evidence. If it cannot be
   proved, continuity is inconclusive or changed without verifiable lineage.
 - The official SDK is pre-1.0 and implements a subset of C2PA 2.4.
-- The first artifact is macOS/Apple Silicon. The checked-in Ubuntu workflow has
-  not run on an external GitHub runner because nothing was published.
+- The first packaged binary is macOS/Apple Silicon. Source build and tests have
+  also passed on GitHub-hosted Ubuntu.
 
 ## Next gate
 
-Verify the first public GitHub CI run. Then, after separate explicit approval,
-verify the working name/trademarks, publish an immutable release and checksums,
-list the Action, and observe real third-party use. Do not add SaaS features
-before the 30–45 day usage gate in `docs/METRICS.md`.
+After separate explicit approval, verify the working name/trademarks, publish
+an immutable release and checksums, list the Action, and observe real
+third-party use. Do not add SaaS features before the 30–45 day usage gate in
+`docs/METRICS.md`.

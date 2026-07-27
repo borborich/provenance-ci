@@ -21,7 +21,7 @@ gzip metadata. Two consecutive local packages produced the same checksum.
 Current local artifact:
 
 ```text
-64a4ad03647314811397909a9631ba5736c3302d27349531b0987f7c2579a7ee  provenance-ci-v0.1.0-aarch64-apple-darwin.tar.gz
+10743470ec200821d5b167ab3d599a860ec51deb0f5b877c88010c1c6bc79bb4  provenance-ci-v0.1.0-aarch64-apple-darwin.tar.gz
 ```
 
 ## Pre-publication checklist
