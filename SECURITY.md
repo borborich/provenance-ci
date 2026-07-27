@@ -2,19 +2,16 @@
 
 ## Supported version
 
-Only the current `0.1.x` source and exact release artifacts are supported. The
-project is not yet publicly released.
+Only the current `0.1.x` source and exact immutable release artifacts are
+supported.
 
 ## Reporting
 
 Do not open a public issue containing a malicious media sample, private URL,
-credential, token, personal data, or unpublished vulnerability. After a public
-repository exists, configure GitHub private vulnerability reporting and replace
-this paragraph with the repository's private reporting link.
-
-Until then, report privately to the repository owner through an already agreed
-channel. Do not send raw customer assets unless explicitly requested through a
-secure transfer mechanism.
+credential, token, personal data, or unpublished vulnerability. Use
+[GitHub private vulnerability reporting](https://github.com/borborich/provenance-ci/security/advisories/new)
+for security issues. Do not send raw customer assets unless explicitly
+requested through an agreed secure transfer mechanism.
 
 ## Boundaries
 
@@ -28,4 +25,3 @@ secure transfer mechanism.
 - No asset is uploaded to a project-controlled service.
 
 See `docs/THREAT_MODEL.md` and `docs/SECURITY.md` for design details.
-

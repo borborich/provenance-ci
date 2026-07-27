@@ -2,6 +2,18 @@
 
 All notable changes are documented here.
 
+## 0.1.1 - 2026-07-27
+
+- Prepared the root Action metadata and documentation for GitHub Marketplace.
+- Documented runner-local processing, privacy, support, and private
+  vulnerability-reporting paths.
+- Enabled repository release immutability, Dependabot alerts and security
+  updates, secret scanning push protection, CodeQL default setup, and
+  non-destructive `main` branch protection.
+- Added weekly pinned dependency update checks for Cargo and GitHub Actions.
+- Kept the validation core, schemas, policy semantics, and network boundaries
+  unchanged from `0.1.0`.
+
 ## 0.1.0 - 2026-07-27
 
 - Added a pinned official C2PA Rust SDK adapter for JPEG validation.

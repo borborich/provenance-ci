@@ -3,8 +3,8 @@
 Local-first CI regression and continuity testing for Content Credentials across
 ordered publishing checkpoints.
 
-> Project status: `v0.1.0` is the first public release. The Action is not yet
-> listed in GitHub Marketplace. This project is not affiliated with or endorsed
+> Project status: `v0.1.1` is the Marketplace release of the local JPEG
+> validator and GitHub Action. This project is not affiliated with or endorsed
 > by C2PA, the Content Authenticity Initiative, Adobe, or any other vendor.
 > “Provenance CI” is a working name only.
 
@@ -56,7 +56,7 @@ cargo run --locked -- \
   --markdown provenance-ci-summary.md
 ```
 
-The `v0.1.0` GitHub Release also provides a macOS Apple Silicon binary archive
+The `v0.1.1` GitHub Release also provides a macOS Apple Silicon binary archive
 and a sibling SHA-256 file. Other platforms should build from the immutable
 release tag with the pinned `Cargo.lock`.
 
@@ -111,15 +111,28 @@ permissions:
 
 steps:
   - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-  - uses: borborich/provenance-ci@v0.1.0
+  - uses: borborich/provenance-ci@v0.1.1
     with:
       config: provenance-ci.yml
 ```
 
-The `v0.1.0` release tag and its assets are protected by GitHub release
+The `v0.1.1` release tag and its assets are protected by GitHub release
 immutability. For the strongest supply-chain pinning, resolve the tag and use
 its reviewed full commit SHA. The Action builds from the pinned lockfile unless
 a prebuilt binary is explicitly supplied. User assets remain on the runner.
+
+## Security, privacy, and support
+
+The Action processes assets on the caller's runner. The project operates no
+backend, account system, analytics endpoint, or telemetry collector. By
+default, the Action uploads only the versioned JSON evidence artifact with
+14-day retention; set `upload-artifact: "false"` to disable that upload.
+
+- Review the [privacy and data-flow details](docs/PRIVACY.md).
+- Report vulnerabilities through
+  [GitHub private vulnerability reporting](https://github.com/borborich/provenance-ci/security/advisories/new).
+- Use [GitHub Issues](https://github.com/borborich/provenance-ci/issues) for
+  non-sensitive support requests after reviewing [SUPPORT.md](SUPPORT.md).
 
 ## Verification
 

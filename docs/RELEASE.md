@@ -3,8 +3,8 @@
 The source repository is public at
 https://github.com/borborich/provenance-ci. The immutable `v0.1.0` release is
 published at https://github.com/borborich/provenance-ci/releases/tag/v0.1.0.
-No package registry, Action Marketplace listing, or website has been
-published.
+The `v0.1.1` Marketplace patch is prepared but not yet published. No package
+registry, Action Marketplace listing, or website has been published.
 
 ## Build release artifact
 
@@ -23,7 +23,7 @@ gzip metadata. Two consecutive local packages produced the same checksum.
 Current local artifact:
 
 ```text
-ac2bd746ce8936dbf2cb865be24cd875ab443cbbacd4bc69c9a0c96d2e3ec343  provenance-ci-v0.1.0-aarch64-apple-darwin.tar.gz
+e8aa1e5fca21fd815457264cb6410355d68d5c1b1548d88aed62bbce544284f2  provenance-ci-v0.1.1-aarch64-apple-darwin.tar.gz
 ```
 
 ## Pre-publication checklist
@@ -38,10 +38,13 @@ ac2bd746ce8936dbf2cb865be24cd875ab443cbbacd4bc69c9a0c96d2e3ec343  provenance-ci-
 - [x] Format, clippy, tests, Action integration, differential test, license
       inventory, release smoke, and clean-checkout build pass.
 - [x] Release archive/checksum and third-party notices reviewed.
-- [ ] GitHub 2FA, security policy, private vulnerability reporting, branch
-      protection, dependency updates, and code scanning configured.
-- [x] Immutable patch release/tag created; any movable major alias managed
-      separately.
+- [x] Security policy, private vulnerability reporting, branch protection,
+      dependency updates, secret scanning push protection, and code scanning
+      configured.
+- [ ] Owner completes GitHub 2FA and accepts the Marketplace Developer
+      Agreement.
+- [ ] Immutable `v0.1.1` release/tag and Marketplace listing published; any
+      movable major alias managed separately.
 - [ ] `action.yml` remains at repository root with unique truthful name,
       description, branding from the allowed Feather/color set, and
       `contents: read` quickstart.
@@ -56,4 +59,5 @@ GitHub publication references:
 - https://docs.github.com/en/actions/how-tos/create-and-publish-actions/release-and-maintain-actions
 - https://docs.github.com/en/actions/reference/security/secure-use
 
-Action Marketplace publication requires separate explicit owner approval.
+Action Marketplace publication requires the owner to personally accept GitHub's
+legal terms and complete two-factor confirmation.

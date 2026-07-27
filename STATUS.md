@@ -49,15 +49,22 @@ out of scope.
 - A preliminary exact-name and repository search found no obvious conflicting
   “Provenance CI” product. This is not legal or trademark clearance, so the
   public working-name caveat remains.
+- Dependabot vulnerability alerts and security updates, secret scanning push
+  protection, private vulnerability reporting, CodeQL default setup, and
+  non-destructive `main` branch protection are enabled.
+- Local `0.1.1` Marketplace release candidate:
+  `dist/provenance-ci-v0.1.1-aarch64-apple-darwin.tar.gz`, SHA-256
+  `e8aa1e5fca21fd815457264cb6410355d68d5c1b1548d88aed62bbce544284f2`.
 
 ## Publication state
 
 The source repository is public at
 `https://github.com/borborich/provenance-ci`. The immutable `v0.1.0` GitHub
 Release is published at
-`https://github.com/borborich/provenance-ci/releases/tag/v0.1.0`. No package
-registry publication, Action Marketplace listing, domain, hosted scanner,
-analytics, billing plan, or external campaign has been created.
+`https://github.com/borborich/provenance-ci/releases/tag/v0.1.0`. The `v0.1.1`
+Marketplace patch is prepared but not yet published. No package registry
+publication, Action Marketplace listing, domain, hosted scanner, analytics,
+billing plan, or external campaign has been created.
 
 ## Known limits
 
@@ -74,7 +81,8 @@ analytics, billing plan, or external campaign has been created.
 
 ## Next gate
 
-Action Marketplace publication remains a separate explicit gate. Before
-listing, complete the remaining repository security/settings review and the
-Marketplace-specific copy review. After listing, observe real third-party use;
-do not add SaaS features before the 30–45 day usage gate in `docs/METRICS.md`.
+The owner must personally accept the GitHub Marketplace Developer Agreement
+and complete GitHub's two-factor confirmation. Then publish and verify the
+immutable `v0.1.1` release and Marketplace listing. After listing, observe real
+third-party use; do not add SaaS features before the 30–45 day usage gate in
+`docs/METRICS.md`.

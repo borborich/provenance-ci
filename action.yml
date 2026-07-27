@@ -1,5 +1,5 @@
-name: Provenance checkpoint CI
-description: Test Content Credentials across ordered publishing checkpoints and locate the first observed break.
+name: Provenance CI checkpoint validator
+description: Validate Content Credentials across ordered JPEG checkpoints and report the first observed break.
 author: Provenance CI contributors
 
 branding:
@@ -69,4 +69,3 @@ runs:
           exit 3
         fi
         exit "$PROVENANCE_EXIT_CODE"
-
