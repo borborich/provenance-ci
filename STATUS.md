@@ -38,10 +38,14 @@ out of scope.
   test, Action integration, license, release-build, and smoke-test gates.
 - Public Ubuntu CI run `30297714701` passed the same gates after updating the
   full-SHA-pinned checkout dependency to `actions/checkout v6.0.2`.
-- Local `0.1.0` artifact:
+- Release Ubuntu CI run `30299051776` passed all required gates on commit
+  `a6b64a33fc236ba0e0d6cd39f7cb42749f495ebc`.
+- Published `0.1.0` artifact:
   `dist/provenance-ci-v0.1.0-aarch64-apple-darwin.tar.gz`, SHA-256
   `ac2bd746ce8936dbf2cb865be24cd875ab443cbbacd4bc69c9a0c96d2e3ec343`.
-- GitHub release immutability is enabled for future releases.
+- GitHub release immutability is enabled. The release API reports `v0.1.0` as
+  immutable, and GitHub release-attestation verification passed for the archive
+  and its checksum file.
 - A preliminary exact-name and repository search found no obvious conflicting
   “Provenance CI” product. This is not legal or trademark clearance, so the
   public working-name caveat remains.
@@ -50,9 +54,10 @@ out of scope.
 
 The source repository is public at
 `https://github.com/borborich/provenance-ci`. The immutable `v0.1.0` GitHub
-Release is prepared but not yet published. No package registry publication,
-Action Marketplace listing, domain, hosted scanner, analytics, billing plan,
-or external campaign has been created.
+Release is published at
+`https://github.com/borborich/provenance-ci/releases/tag/v0.1.0`. No package
+registry publication, Action Marketplace listing, domain, hosted scanner,
+analytics, billing plan, or external campaign has been created.
 
 ## Known limits
 
@@ -69,7 +74,7 @@ or external campaign has been created.
 
 ## Next gate
 
-Publish and verify the immutable `v0.1.0` release and checksum. Action
-Marketplace publication remains a separate explicit gate. After listing, observe
-real third-party use; do not add SaaS features before the 30–45 day usage gate
-in `docs/METRICS.md`.
+Action Marketplace publication remains a separate explicit gate. Before
+listing, complete the remaining repository security/settings review and the
+Marketplace-specific copy review. After listing, observe real third-party use;
+do not add SaaS features before the 30–45 day usage gate in `docs/METRICS.md`.

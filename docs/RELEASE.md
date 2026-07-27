@@ -1,9 +1,10 @@
 # Release and publication
 
 The source repository is public at
-https://github.com/borborich/provenance-ci. GitHub release immutability is
-enabled and `v0.1.0` is prepared for publication. No package registry, Action
-Marketplace listing, or website has been published.
+https://github.com/borborich/provenance-ci. The immutable `v0.1.0` release is
+published at https://github.com/borborich/provenance-ci/releases/tag/v0.1.0.
+No package registry, Action Marketplace listing, or website has been
+published.
 
 ## Build release artifact
 
@@ -39,7 +40,7 @@ ac2bd746ce8936dbf2cb865be24cd875ab443cbbacd4bc69c9a0c96d2e3ec343  provenance-ci-
 - [x] Release archive/checksum and third-party notices reviewed.
 - [ ] GitHub 2FA, security policy, private vulnerability reporting, branch
       protection, dependency updates, and code scanning configured.
-- [ ] Immutable patch release/tag created; any movable major alias managed
+- [x] Immutable patch release/tag created; any movable major alias managed
       separately.
 - [ ] `action.yml` remains at repository root with unique truthful name,
       description, branding from the allowed Feather/color set, and
@@ -55,4 +56,4 @@ GitHub publication references:
 - https://docs.github.com/en/actions/how-tos/create-and-publish-actions/release-and-maintain-actions
 - https://docs.github.com/en/actions/reference/security/secure-use
 
-Publication itself requires explicit owner approval.
+Action Marketplace publication requires separate explicit owner approval.
