@@ -1,9 +1,8 @@
 # Changelog
 
-All notable changes are documented here. Source is public; no immutable release
-or package has been published.
+All notable changes are documented here.
 
-## 0.1.0 - 2026-07-26
+## 0.1.0 - 2026-07-27
 
 - Added a pinned official C2PA Rust SDK adapter for JPEG validation.
 - Added versioned YAML configuration and JSON result schemas.
@@ -23,3 +22,5 @@ or package has been published.
   `https://github.com/borborich/provenance-ci`.
 - Updated the full-SHA-pinned checkout dependency to Node.js 24-based
   `actions/checkout v6.0.2`.
+- Published an immutable GitHub release with a macOS Apple Silicon binary
+  archive and SHA-256 checksum.

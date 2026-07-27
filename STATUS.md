@@ -36,16 +36,23 @@ out of scope.
   produced the same checksum.
 - First public Ubuntu CI run `30297140231` passed all formatting, clippy,
   test, Action integration, license, release-build, and smoke-test gates.
+- Public Ubuntu CI run `30297714701` passed the same gates after updating the
+  full-SHA-pinned checkout dependency to `actions/checkout v6.0.2`.
 - Local `0.1.0` artifact:
   `dist/provenance-ci-v0.1.0-aarch64-apple-darwin.tar.gz`, SHA-256
-  `10743470ec200821d5b167ab3d599a860ec51deb0f5b877c88010c1c6bc79bb4`.
+  `ac2bd746ce8936dbf2cb865be24cd875ab443cbbacd4bc69c9a0c96d2e3ec343`.
+- GitHub release immutability is enabled for future releases.
+- A preliminary exact-name and repository search found no obvious conflicting
+  “Provenance CI” product. This is not legal or trademark clearance, so the
+  public working-name caveat remains.
 
 ## Publication state
 
 The source repository is public at
-`https://github.com/borborich/provenance-ci`. No immutable GitHub release,
-package registry publication, Action Marketplace listing, domain, hosted
-scanner, analytics, billing plan, or external campaign has been created.
+`https://github.com/borborich/provenance-ci`. The immutable `v0.1.0` GitHub
+Release is prepared but not yet published. No package registry publication,
+Action Marketplace listing, domain, hosted scanner, analytics, billing plan,
+or external campaign has been created.
 
 ## Known limits
 
@@ -62,7 +69,7 @@ scanner, analytics, billing plan, or external campaign has been created.
 
 ## Next gate
 
-After separate explicit approval, verify the working name/trademarks, publish
-an immutable release and checksums, list the Action, and observe real
-third-party use. Do not add SaaS features before the 30–45 day usage gate in
-`docs/METRICS.md`.
+Publish and verify the immutable `v0.1.0` release and checksum. Action
+Marketplace publication remains a separate explicit gate. After listing, observe
+real third-party use; do not add SaaS features before the 30–45 day usage gate
+in `docs/METRICS.md`.
