@@ -1,0 +1,22 @@
+version: 1
+
+checks:
+  - id: official-signed-fixtures
+    checkpoints:
+      - name: c
+        path: ../fixtures/official/C.jpg
+      - name: declared-derivative-of-c
+        path: ../fixtures/official/declared_derivative.jpg
+      - name: ca
+        path: ../fixtures/official/CA.jpg
+      - name: invalid-hard-binding
+        path: ../fixtures/official/XCA.jpg
+      - name: stripped
+        path: ../fixtures/official/no_manifest.jpg
+      - name: remote-manifest
+        path: ../fixtures/official/remote_manifest.jpg
+    policy:
+      requireCredential: false
+      requireValidBinding: false
+      continuity: any
+      onInconclusive: warn

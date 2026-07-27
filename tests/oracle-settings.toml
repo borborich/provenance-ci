@@ -1,0 +1,8 @@
+version = 1
+
+[verify]
+verify_after_reading = true
+verify_trust = false
+remote_manifest_fetch = false
+ocsp_fetch = false
+

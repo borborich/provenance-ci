@@ -1,0 +1,15 @@
+version: 1
+
+checks:
+  - id: exact-or-declared-derivative
+    checkpoints:
+      - name: source
+        path: ../fixtures/official/C.jpg
+      - name: derived
+        path: ../fixtures/official/declared_derivative.jpg
+    policy:
+      requireCredential: true
+      requireValidBinding: true
+      continuity: exact-or-declared-derivative
+      onInconclusive: fail
+

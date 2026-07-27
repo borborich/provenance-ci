@@ -1,0 +1,21 @@
+version: 1
+
+# Trust is deliberately not checked in this portable example. To enable it,
+# set anchorsPath to a pinned local PEM snapshot and record an immutable id.
+trust:
+  id: not-configured
+
+checks:
+  - id: signed-source-to-derived
+    checkpoints:
+      - name: source
+        path: ../fixtures/official/C.jpg
+      - name: build
+        path: ../fixtures/official/declared_derivative.jpg
+      - name: production
+        path: ../fixtures/official/no_manifest.jpg
+    policy:
+      requireCredential: true
+      requireValidBinding: true
+      continuity: exact-or-declared-derivative
+      onInconclusive: warn

@@ -1,0 +1,10 @@
+version: 1
+
+checks:
+  - id: missing-checkpoint
+    checkpoints:
+      - name: unavailable
+        path: ../fixtures/does-not-exist.jpg
+    policy:
+      requireCredential: true
+      requireValidBinding: true

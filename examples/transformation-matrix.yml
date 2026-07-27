@@ -1,0 +1,43 @@
+version: 1
+
+checks:
+  - id: metadata-stripped
+    checkpoints:
+      - name: source
+        path: ../fixtures/official/C.jpg
+      - name: transformed
+        path: ../fixtures/transforms/metadata-stripped.jpg
+    policy:
+      continuity: exact-or-declared-derivative
+  - id: jpeg-reencode
+    checkpoints:
+      - name: source
+        path: ../fixtures/official/C.jpg
+      - name: transformed
+        path: ../fixtures/transforms/reencoded.jpg
+    policy:
+      continuity: exact-or-declared-derivative
+  - id: resize
+    checkpoints:
+      - name: source
+        path: ../fixtures/official/C.jpg
+      - name: transformed
+        path: ../fixtures/transforms/resized.jpg
+    policy:
+      continuity: exact-or-declared-derivative
+  - id: crop
+    checkpoints:
+      - name: source
+        path: ../fixtures/official/C.jpg
+      - name: transformed
+        path: ../fixtures/transforms/cropped.jpg
+    policy:
+      continuity: exact-or-declared-derivative
+  - id: orientation-normalization
+    checkpoints:
+      - name: source
+        path: ../fixtures/official/C.jpg
+      - name: transformed
+        path: ../fixtures/transforms/orientation-normalized.jpg
+    policy:
+      continuity: exact-or-declared-derivative

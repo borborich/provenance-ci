@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:provenance-ci:schema:result:v1",
+  "title": "Provenance CI result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "generatedAt",
+    "tool",
+    "trust",
+    "checks",
+    "overallPolicy",
+    "exitCode"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "c2paSdk", "supportedSpecification"],
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "c2paSdk": { "type": "string" },
+        "supportedSpecification": { "type": "string" }
+      }
+    },
+    "trust": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["checked", "id", "sha256"],
+      "properties": {
+        "checked": { "type": "boolean" },
+        "id": { "type": ["string", "null"] },
+        "sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "checks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/check" }
+    },
+    "overallPolicy": { "$ref": "#/$defs/policyVerdict" },
+    "exitCode": { "enum": [0, 2, 3] }
+  },
+  "$defs": {
+    "presence": {
+      "enum": ["present", "absent", "unreadable", "unknown"]
+    },
+    "crypto": {
+      "enum": ["valid", "invalid", "indeterminate", "not_applicable"]
+    },
+    "trust": {
+      "enum": ["trusted", "untrusted", "not_checked", "unknown"]
+    },
+    "relationship": {
+      "enum": [
+        "byte_identical",
+        "declared_c2pa_derivative",
+        "credentials_lost",
+        "changed_without_verifiable_lineage",
+        "different_asset",
+        "inconclusive",
+        "not_applicable"
+      ]
+    },
+    "policyVerdict": {
+      "enum": ["pass", "warn", "fail", "inconclusive"]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value", "finalUrl", "httpStatus", "httpHeaders"],
+      "properties": {
+        "kind": { "enum": ["path", "url"] },
+        "value": { "type": "string" },
+        "finalUrl": { "type": ["string", "null"] },
+        "httpStatus": { "type": ["integer", "null"] },
+        "httpHeaders": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "checkpoint": {
+      "type": "object",
+      "required": [
+        "checkpoint",
+        "source",
+        "sha256",
+        "mediaType",
+        "sizeBytes",
+        "width",
+        "height",
+        "checkedAt",
+        "credentialPresence",
+        "cryptographicValidation",
+        "trust",
+        "relationshipToPreviousCheckpoint",
+        "activeManifest",
+        "parentManifests",
+        "rawValidationCodes",
+        "evidence",
+        "limitations",
+        "error"
+      ],
+      "properties": {
+        "checkpoint": { "type": "string" },
+        "source": { "$ref": "#/$defs/source" },
+        "sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "mediaType": { "type": ["string", "null"] },
+        "sizeBytes": { "type": ["integer", "null"], "minimum": 0 },
+        "width": { "type": ["integer", "null"], "minimum": 1 },
+        "height": { "type": ["integer", "null"], "minimum": 1 },
+        "checkedAt": { "type": "string", "format": "date-time" },
+        "credentialPresence": { "$ref": "#/$defs/presence" },
+        "cryptographicValidation": { "$ref": "#/$defs/crypto" },
+        "trust": { "$ref": "#/$defs/trust" },
+        "relationshipToPreviousCheckpoint": {
+          "$ref": "#/$defs/relationship"
+        },
+        "activeManifest": { "type": ["string", "null"] },
+        "parentManifests": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "rawValidationCodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["code", "kind", "url", "explanation"],
+            "properties": {
+              "code": { "type": "string" },
+              "kind": { "type": "string" },
+              "url": { "type": ["string", "null"] },
+              "explanation": { "type": ["string", "null"] }
+            }
+          }
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["fact", "detail"],
+            "properties": {
+              "fact": { "type": "string" },
+              "detail": { "type": "string" }
+            }
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "error": { "type": ["string", "null"] }
+      }
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "checkpoints",
+        "firstObservedBreak",
+        "policy",
+        "policyReasons"
+      ],
+      "properties": {
+        "id": { "type": "string" },
+        "checkpoints": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/checkpoint" }
+        },
+        "firstObservedBreak": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/observedBreak" }
+          ]
+        },
+        "policy": { "$ref": "#/$defs/policyVerdict" },
+        "policyReasons": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "observedBreak": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "to", "relationship", "statement"],
+      "properties": {
+        "from": { "type": "string" },
+        "to": { "type": "string" },
+        "relationship": { "$ref": "#/$defs/relationship" },
+        "statement": { "type": "string" }
+      }
+    }
+  }
+}

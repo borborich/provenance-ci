@@ -1,0 +1,72 @@
+name: Provenance checkpoint CI
+description: Test Content Credentials across ordered publishing checkpoints and locate the first observed break.
+author: Provenance CI contributors
+
+branding:
+  icon: check-circle
+  color: blue
+
+inputs:
+  config:
+    description: Path to the versioned Provenance CI YAML configuration.
+    required: false
+    default: provenance-ci.yml
+  result-path:
+    description: Path for the versioned JSON result.
+    required: false
+    default: provenance-ci-result.json
+  artifact-name:
+    description: Name of the uploaded JSON artifact.
+    required: false
+    default: provenance-ci-result
+  upload-artifact:
+    description: Upload the JSON result with actions/upload-artifact.
+    required: false
+    default: "true"
+  binary:
+    description: Optional path to a prebuilt provenance-ci binary. Otherwise Cargo builds the pinned source.
+    required: false
+    default: ""
+
+outputs:
+  result-path:
+    description: JSON result path.
+    value: ${{ steps.validate.outputs.result_path }}
+  exit-code:
+    description: "0=pass/warn, 2=policy failure, 3=inconclusive/infrastructure/config error."
+    value: ${{ steps.validate.outputs.exit_code }}
+
+runs:
+  using: composite
+  steps:
+    - name: Validate Content Credentials checkpoints
+      id: validate
+      continue-on-error: true
+      shell: bash
+      env:
+        INPUT_CONFIG: ${{ inputs.config }}
+        INPUT_RESULT_PATH: ${{ inputs.result-path }}
+        INPUT_BINARY: ${{ inputs.binary }}
+      run: "$GITHUB_ACTION_PATH/integrations/github-action/run.sh"
+
+    - name: Upload versioned JSON evidence
+      if: ${{ always() && inputs.upload-artifact == 'true' && steps.validate.outputs.result_path != '' }}
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: ${{ steps.validate.outputs.result_path }}
+        if-no-files-found: error
+        retention-days: 14
+
+    - name: Enforce Provenance CI exit semantics
+      if: ${{ always() }}
+      shell: bash
+      env:
+        PROVENANCE_EXIT_CODE: ${{ steps.validate.outputs.exit_code }}
+      run: |
+        if [[ ! "$PROVENANCE_EXIT_CODE" =~ ^(0|2|3)$ ]]; then
+          echo "::error title=Provenance CI::Validator did not return a stable exit code"
+          exit 3
+        fi
+        exit "$PROVENANCE_EXIT_CODE"
+

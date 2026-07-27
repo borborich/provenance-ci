@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:provenance-ci:schema:config:v1",
+  "title": "Provenance CI configuration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "checks"],
+  "properties": {
+    "version": { "const": 1 },
+    "trust": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "anchorsPath": { "type": "string", "minLength": 1 },
+        "id": { "type": "string", "minLength": 1 }
+      }
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/check" }
+    }
+  },
+  "$defs": {
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "checkpoints"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "checkpoints": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/checkpoint" }
+        },
+        "policy": { "$ref": "#/$defs/policy" }
+      }
+    },
+    "checkpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri" }
+      },
+      "oneOf": [
+        { "required": ["path"], "not": { "required": ["url"] } },
+        { "required": ["url"], "not": { "required": ["path"] } }
+      ]
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "requireCredential": { "type": "boolean", "default": false },
+        "requireValidBinding": { "type": "boolean", "default": false },
+        "requireTrusted": { "type": "boolean", "default": false },
+        "continuity": {
+          "enum": ["any", "exact", "exact-or-declared-derivative"],
+          "default": "any"
+        },
+        "onInconclusive": {
+          "enum": ["pass", "warn", "fail"],
+          "default": "warn"
+        }
+      }
+    }
+  }
+}
