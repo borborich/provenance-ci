@@ -52,19 +52,27 @@ out of scope.
 - Dependabot vulnerability alerts and security updates, secret scanning push
   protection, private vulnerability reporting, CodeQL default setup, and
   non-destructive `main` branch protection are enabled.
-- Local `0.1.1` Marketplace release candidate:
+- Release CI run `30305889837`, CodeQL run `30305889422`, and both Dependabot
+  ecosystem checks passed on commit
+  `11fdb101b8e39ab421690c9203311a86e79aeb7a`.
+- Published `0.1.1` Marketplace artifact:
   `dist/provenance-ci-v0.1.1-aarch64-apple-darwin.tar.gz`, SHA-256
   `e8aa1e5fca21fd815457264cb6410355d68d5c1b1548d88aed62bbce544284f2`.
+- The `v0.1.1` release API reports `immutable: true`, and GitHub
+  release-attestation verification passed for the archive and checksum file.
+- The Action is published in GitHub Marketplace under the Continuous
+  integration and Testing categories.
 
 ## Publication state
 
 The source repository is public at
-`https://github.com/borborich/provenance-ci`. The immutable `v0.1.0` GitHub
+`https://github.com/borborich/provenance-ci`. The immutable `v0.1.1` GitHub
 Release is published at
-`https://github.com/borborich/provenance-ci/releases/tag/v0.1.0`. The `v0.1.1`
-Marketplace patch is prepared but not yet published. No package registry
-publication, Action Marketplace listing, domain, hosted scanner, analytics,
-billing plan, or external campaign has been created.
+`https://github.com/borborich/provenance-ci/releases/tag/v0.1.1`. The Action is
+listed at
+`https://github.com/marketplace/actions/provenance-ci-checkpoint-validator`.
+No package registry publication, domain, hosted scanner, analytics, billing
+plan, or external campaign has been created.
 
 ## Known limits
 
@@ -81,8 +89,7 @@ billing plan, or external campaign has been created.
 
 ## Next gate
 
-The owner must personally accept the GitHub Marketplace Developer Agreement
-and complete GitHub's two-factor confirmation. Then publish and verify the
-immutable `v0.1.1` release and Marketplace listing. After listing, observe real
-third-party use; do not add SaaS features before the 30–45 day usage gate in
-`docs/METRICS.md`.
+Observe real third-party use for the 30–45 day gate in `docs/METRICS.md`.
+Track installs, successful checks, repeat use, support load, and inconclusive
+rates without adding telemetry or uploading raw assets. Do not add SaaS,
+accounts, billing, signing, or hosted scanning before that gate.

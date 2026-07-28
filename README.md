@@ -4,9 +4,11 @@ Local-first CI regression and continuity testing for Content Credentials across
 ordered publishing checkpoints.
 
 > Project status: `v0.1.1` is the Marketplace release of the local JPEG
-> validator and GitHub Action. This project is not affiliated with or endorsed
-> by C2PA, the Content Authenticity Initiative, Adobe, or any other vendor.
-> “Provenance CI” is a working name only.
+> validator and GitHub Action, available from the
+> [GitHub Marketplace](https://github.com/marketplace/actions/provenance-ci-checkpoint-validator).
+> This project is not affiliated with or endorsed by C2PA, the Content
+> Authenticity Initiative, Adobe, or any other vendor. “Provenance CI” is a
+> working name only.
 
 ## What it does
 

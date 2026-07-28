@@ -1,10 +1,12 @@
 # Release and publication
 
 The source repository is public at
-https://github.com/borborich/provenance-ci. The immutable `v0.1.0` release is
-published at https://github.com/borborich/provenance-ci/releases/tag/v0.1.0.
-The `v0.1.1` Marketplace patch is prepared but not yet published. No package
-registry, Action Marketplace listing, or website has been published.
+https://github.com/borborich/provenance-ci. The immutable `v0.1.1` release is
+published at https://github.com/borborich/provenance-ci/releases/tag/v0.1.1.
+The Action is listed at
+https://github.com/marketplace/actions/provenance-ci-checkpoint-validator
+under the Continuous integration and Testing categories. No package registry
+or website has been published.
 
 ## Build release artifact
 
@@ -41,14 +43,14 @@ e8aa1e5fca21fd815457264cb6410355d68d5c1b1548d88aed62bbce544284f2  provenance-ci-
 - [x] Security policy, private vulnerability reporting, branch protection,
       dependency updates, secret scanning push protection, and code scanning
       configured.
-- [ ] Owner completes GitHub 2FA and accepts the Marketplace Developer
+- [x] Owner completes GitHub 2FA and accepts the Marketplace Developer
       Agreement.
-- [ ] Immutable `v0.1.1` release/tag and Marketplace listing published; any
+- [x] Immutable `v0.1.1` release/tag and Marketplace listing published; any
       movable major alias managed separately.
 - [ ] `action.yml` remains at repository root with unique truthful name,
       description, branding from the allowed Feather/color set, and
       `contents: read` quickstart.
-- [ ] Marketplace listing explicitly says assets stay on runner, documents
+- [x] Marketplace listing explicitly says assets stay on runner, documents
       limitations, support, privacy, and exit codes.
 - [ ] Do not transfer the GitHub App installation thresholds or paid-App
       billing rules to an Action listing.
@@ -59,5 +61,5 @@ GitHub publication references:
 - https://docs.github.com/en/actions/how-tos/create-and-publish-actions/release-and-maintain-actions
 - https://docs.github.com/en/actions/reference/security/secure-use
 
-Action Marketplace publication requires the owner to personally accept GitHub's
-legal terms and complete two-factor confirmation.
+Marketplace publication completed on 2026-07-28 after owner acceptance and
+two-factor confirmation.

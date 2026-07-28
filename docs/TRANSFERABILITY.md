@@ -11,10 +11,10 @@
 
 ## Current external services and accounts
 
-None are required to build or run locally. The public source repository is
-owned by the `borborich` GitHub account. A future release and Marketplace
-listing would use that account unless ownership changes. No domain, cloud,
-analytics, payment, email, or monitoring account exists.
+None are required to build or run locally. The public source repository,
+immutable releases, and Marketplace listing are owned by the `borborich` GitHub
+account unless ownership changes. No domain, cloud, analytics, payment, email,
+or monitoring account exists.
 
 ## Transfer procedure
 

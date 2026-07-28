@@ -11,6 +11,8 @@ All notable changes are documented here.
   updates, secret scanning push protection, CodeQL default setup, and
   non-destructive `main` branch protection.
 - Added weekly pinned dependency update checks for Cargo and GitHub Actions.
+- Published the Action in GitHub Marketplace under the Continuous integration
+  and Testing categories.
 - Kept the validation core, schemas, policy semantics, and network boundaries
   unchanged from `0.1.0`.
 
