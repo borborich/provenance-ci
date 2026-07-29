@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://borborich.github.io/provenance-ci/</loc>
+    <lastmod>2026-07-29</lastmod>
+  </url>
+  <url>
+    <loc>https://borborich.github.io/provenance-ci/guides/find-c2pa-break/</loc>
+    <lastmod>2026-07-29</lastmod>
+  </url>
+  <url>
+    <loc>https://borborich.github.io/provenance-ci/guides/github-actions/</loc>
+    <lastmod>2026-07-29</lastmod>
+  </url>
+  <url>
+    <loc>https://borborich.github.io/provenance-ci/concepts/validation-dimensions/</loc>
+    <lastmod>2026-07-29</lastmod>
+  </url>
+  <url>
+    <loc>https://borborich.github.io/provenance-ci/limitations/</loc>
+    <lastmod>2026-07-29</lastmod>
+  </url>
+</urlset>

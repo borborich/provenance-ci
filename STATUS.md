@@ -1,6 +1,6 @@
 # Status
 
-Last updated: 2026-07-27
+Last updated: 2026-07-29
 
 ## Decision
 
@@ -62,6 +62,9 @@ out of scope.
   release-attestation verification passed for the archive and checksum file.
 - The Action is published in GitHub Marketplace under the Continuous
   integration and Testing categories.
+- An English-language static reference site and reproducible first-break guide
+  are prepared for GitHub Pages. The site has no application backend,
+  analytics, user accounts, asset upload, or hosted validation.
 
 ## Publication state
 
@@ -72,7 +75,9 @@ Release is published at
 listed at
 `https://github.com/marketplace/actions/provenance-ci-checkpoint-validator`.
 No package registry publication, domain, hosted scanner, analytics, billing
-plan, or external campaign has been created.
+plan, or third-party promotional campaign has been created. The GitHub Pages
+reference site is published from version-controlled static files in this
+repository.
 
 ## Known limits
 

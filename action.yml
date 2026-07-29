@@ -1,5 +1,5 @@
 name: Provenance CI checkpoint validator
-description: Validate Content Credentials across ordered JPEG checkpoints and report the first observed break.
+description: Validate C2PA Content Credentials across ordered JPEG checkpoints and report the first observed break.
 author: Provenance CI contributors
 
 branding:

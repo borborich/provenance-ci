@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Find where C2PA Content Credentials are lost in a publishing pipeline</title>
+    <meta
+      name="description"
+      content="Use ordered JPEG checkpoints to identify the first observed interval where C2PA Content Credentials disappear, fail validation, or lose declared continuity."
+    >
+    <link
+      rel="canonical"
+      href="https://borborich.github.io/provenance-ci/guides/find-c2pa-break/"
+    >
+    <link rel="stylesheet" href="../../styles.css">
+    <meta property="og:type" content="article">
+    <meta
+      property="og:title"
+      content="Find where C2PA Content Credentials are lost in a publishing pipeline"
+    >
+    <meta
+      property="og:description"
+      content="A reproducible source → build → production checkpoint test with honest first-observed-break semantics."
+    >
+    <meta
+      property="og:url"
+      content="https://borborich.github.io/provenance-ci/guides/find-c2pa-break/"
+    >
+    <meta
+      property="og:image"
+      content="https://borborich.github.io/provenance-ci/og.png"
+    >
+    <meta
+      property="og:image:alt"
+      content="Provenance CI checkpoint pipeline from source to an observed production break"
+    >
+    <meta name="twitter:card" content="summary_large_image">
+    <meta
+      name="twitter:image"
+      content="https://borborich.github.io/provenance-ci/og.png"
+    >
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <nav class="nav" aria-label="Primary navigation">
+        <a class="brand" href="../../">
+          <span class="brand-mark" aria-hidden="true">P/CI</span>
+          <span>Provenance CI</span>
+        </a>
+        <div class="nav-links">
+          <a href="../github-actions/">GitHub Actions</a>
+          <a href="../../concepts/validation-dimensions/">Concepts</a>
+          <a href="../../limitations/">Limitations</a>
+          <a href="https://github.com/borborich/provenance-ci">GitHub</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="page article" id="main">
+      <header class="article-header">
+        <p class="eyebrow">Reproducible guide</p>
+        <h1>How to find where C2PA Content Credentials are first observed to break</h1>
+        <p class="lede">
+          Validate an ordered list of checkpoints—not just the source and final
+          URL. Provenance CI compares every adjacent pair and reports the first
+          supplied interval where credentials disappear, fail validation, or
+          no longer have exact-byte or validated declared-parent continuity.
+        </p>
+        <div class="article-meta">
+          <span>Tested with Provenance CI 0.1.1</span>
+          <span>C2PA SDK 0.90.3</span>
+          <span>JPEG</span>
+          <span>Updated 2026-07-29</span>
+        </div>
+      </header>
+
+      <section>
+        <h2>Short answer</h2>
+        <p>
+          Add checkpoints immediately before and after the systems you want to
+          observe, such as a build, CMS export, image optimizer, origin, and
+          CDN. A break between <code>build</code> and <code>production</code>
+          means only that this is the first supplied interval where the change
+          was observed. It does not identify an unobserved CMS, optimizer, or
+          CDN as the cause.
+        </p>
+        <div class="pipeline" aria-label="Example ordered checkpoints">
+          <div class="pipeline-step">source</div>
+          <div class="pipeline-step">build</div>
+          <div class="pipeline-step">CMS</div>
+          <div class="pipeline-step">optimizer</div>
+          <div class="pipeline-step">origin</div>
+          <div class="pipeline-step observed">production</div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Run the committed example</h2>
+        <p>
+          The repository includes a signed source JPEG, a valid declared C2PA
+          derivative, and a production fixture without a manifest. Clone the
+          immutable release and run the versioned configuration:
+        </p>
+        <pre><code>git clone --branch v0.1.1 --depth 1 \
+  https://github.com/borborich/provenance-ci.git
+cd provenance-ci
+
+cargo run --release --locked -- \
+  --config examples/provenance-ci.yml \
+  --output provenance-ci-result.json \
+  --markdown provenance-ci-summary.md</code></pre>
+        <p>
+          This intentional regression returns exit code <code>2</code> because
+          the configured policy fails. Exit code <code>3</code> is reserved for
+          inconclusive infrastructure, acquisition, or configuration failures.
+        </p>
+      </section>
+
+      <section>
+        <h2>The ordered checkpoint configuration</h2>
+        <pre><code>version: 1
+
+trust:
+  id: not-configured
+
+checks:
+  - id: signed-source-to-derived
+    checkpoints:
+      - name: source
+        path: ../fixtures/official/C.jpg
+      - name: build
+        path: ../fixtures/official/declared_derivative.jpg
+      - name: production
+        path: ../fixtures/official/no_manifest.jpg
+    policy:
+      requireCredential: true
+      requireValidBinding: true
+      continuity: exact-or-declared-derivative
+      onInconclusive: warn</code></pre>
+        <div class="callout">
+          <strong>Trust is deliberately not checked in this portable example.</strong>
+          To evaluate trust, supply a pinned local PEM snapshot and record its
+          immutable identifier. Without that file, the result is
+          <code>not_checked</code>, not <code>untrusted</code>.
+        </div>
+      </section>
+
+      <section>
+        <h2>Observed result</h2>
+        <p>
+          Running the committed example produces the following checkpoint
+          summary:
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Checkpoint</th>
+              <th>Presence</th>
+              <th>Validation</th>
+              <th>Trust</th>
+              <th>Relationship</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>source</code></td>
+              <td>Present</td>
+              <td>Valid</td>
+              <td>NotChecked</td>
+              <td>NotApplicable</td>
+            </tr>
+            <tr>
+              <td><code>build</code></td>
+              <td>Present</td>
+              <td>Valid</td>
+              <td>NotChecked</td>
+              <td>DeclaredC2paDerivative</td>
+            </tr>
+            <tr>
+              <td><code>production</code></td>
+              <td>Absent</td>
+              <td>NotApplicable</td>
+              <td>NotChecked</td>
+              <td>CredentialsLost</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="result">
+          <p class="result-label">Tool statement</p>
+          <p>
+            <strong>First observed break occurred between checkpoint
+            'build' and checkpoint 'production'.</strong>
+          </p>
+        </div>
+        <p>
+          The build output is not byte-identical to the source, but it contains
+          a valid current manifest and validated parent evidence referring to
+          the prior active manifest. It is therefore reported as a declared
+          C2PA derivative, not as a continuity break. The production fixture is
+          the first supplied checkpoint where the credential is absent.
+        </p>
+        <p>
+          Inspect the
+          <a
+            href="https://github.com/borborich/provenance-ci/blob/v0.1.1/examples/provenance-ci.yml"
+          >versioned configuration</a>
+          and
+          <a
+            href="https://github.com/borborich/provenance-ci/blob/v0.1.1/fixtures/README.md"
+          >fixture provenance</a>
+          used for this result.
+        </p>
+      </section>
+
+      <section>
+        <h2>Apply the pattern to a real publishing pipeline</h2>
+        <ol>
+          <li>
+            Save the signed source asset as a local path checkpoint.
+          </li>
+          <li>
+            Add a local checkpoint after every build or image-generation stage
+            you control.
+          </li>
+          <li>
+            Expose public HTTPS checkpoint URLs for the origin and delivered
+            asset where appropriate.
+          </li>
+          <li>
+            Name checkpoints after observed locations, not presumed causes.
+          </li>
+          <li>
+            Run the same ordered configuration after relevant pipeline changes.
+          </li>
+        </ol>
+        <pre><code>checks:
+  - id: homepage-hero
+    checkpoints:
+      - name: signed-source
+        path: assets/hero.jpg
+      - name: build-output
+        path: dist/hero.jpg
+      - name: origin
+        url: https://origin.example.com/hero.jpg
+      - name: delivered
+        url: https://www.example.com/images/hero.jpg
+    policy:
+      requireCredential: true
+      requireValidBinding: true
+      continuity: exact-or-declared-derivative
+      onInconclusive: warn</code></pre>
+        <p>
+          URL checkpoints accept public HTTPS on port 443 only and apply
+          destination, redirect, content-type, body-size, and timeout controls.
+          Query strings are not persisted in results.
+        </p>
+      </section>
+
+      <section>
+        <h2>What the result does not prove</h2>
+        <div class="callout danger">
+          <strong>A first observed break is an interval, not a root-cause claim.</strong>
+          If the only supplied checkpoints are <code>build</code> and
+          <code>production</code>, the tool cannot distinguish an intervening
+          CMS, optimizer, origin process, or CDN behavior. Add controlled
+          intermediate checkpoints to narrow that interval.
+        </div>
+        <ul>
+          <li>Credential absence does not prove that content is false, manipulated, or AI-generated.</li>
+          <li>Valid cryptographic binding does not establish authorship, copyright, or content truth.</li>
+          <li>A changed file can be a valid declared derivative.</li>
+          <li>Remote manifests and soft-binding recovery are not evaluated in the MVP.</li>
+          <li>Perceptual similarity is not treated as C2PA continuity evidence.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Next step</h2>
+        <p>
+          Put the ordered configuration in your repository and run it in CI.
+          The GitHub Action writes annotations, a Job Summary, and a versioned
+          JSON evidence artifact.
+        </p>
+        <div class="actions">
+          <a class="button" href="../github-actions/">GitHub Actions walkthrough</a>
+          <a
+            class="button secondary"
+            href="https://github.com/marketplace/actions/provenance-ci-checkpoint-validator"
+          >Open Marketplace</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Provenance CI validates provenance evidence at supplied checkpoints. It
+        is not affiliated with or endorsed by C2PA, CAI, Adobe, or any vendor.
+      </p>
+      <nav aria-label="Footer navigation">
+        <a href="../../">Home</a>
+        <a href="../../limitations/">Limitations</a>
+        <a href="https://github.com/borborich/provenance-ci">Source</a>
+      </nav>
+    </footer>
+  </body>
+</html>

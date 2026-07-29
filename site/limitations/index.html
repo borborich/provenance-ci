@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Provenance CI scope, security, and limitations</title>
+    <meta
+      name="description"
+      content="Documented scope and limitations of the local JPEG C2PA Content Credentials validator and GitHub Action."
+    >
+    <link
+      rel="canonical"
+      href="https://borborich.github.io/provenance-ci/limitations/"
+    >
+    <link rel="stylesheet" href="../styles.css">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Provenance CI scope, security, and limitations">
+    <meta
+      property="og:description"
+      content="What the C2PA checkpoint validator evaluates, what remains out of scope, and what its evidence cannot prove."
+    >
+    <meta
+      property="og:url"
+      content="https://borborich.github.io/provenance-ci/limitations/"
+    >
+    <meta
+      property="og:image"
+      content="https://borborich.github.io/provenance-ci/og.png"
+    >
+    <meta
+      property="og:image:alt"
+      content="Provenance CI checkpoint pipeline from source to an observed production break"
+    >
+    <meta name="twitter:card" content="summary_large_image">
+    <meta
+      name="twitter:image"
+      content="https://borborich.github.io/provenance-ci/og.png"
+    >
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <nav class="nav" aria-label="Primary navigation">
+        <a class="brand" href="../">
+          <span class="brand-mark" aria-hidden="true">P/CI</span>
+          <span>Provenance CI</span>
+        </a>
+        <div class="nav-links">
+          <a href="../guides/find-c2pa-break/">Diagnosis guide</a>
+          <a href="../guides/github-actions/">GitHub Actions</a>
+          <a href="../concepts/validation-dimensions/">Concepts</a>
+          <a href="https://github.com/borborich/provenance-ci">GitHub</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="page article" id="main">
+      <header class="article-header">
+        <p class="eyebrow">Scope and limitations</p>
+        <h1>Evidence at supplied checkpoints—not a truth or root-cause oracle</h1>
+        <p class="lede">
+          Provenance CI is a local JPEG validation core, CLI, and GitHub Action.
+          Its narrow scope is deliberate: explicit evidence, controlled network
+          behavior, and honest inconclusive results.
+        </p>
+        <div class="article-meta">
+          <span>Version 0.1.1</span>
+          <span>JPEG only</span>
+          <span>Updated 2026-07-29</span>
+        </div>
+      </header>
+
+      <section>
+        <h2>What the MVP evaluates</h2>
+        <ul>
+          <li>Ordered local JPEG paths and public HTTPS JPEG checkpoints.</li>
+          <li>Credential presence through the official CAI C2PA Rust SDK.</li>
+          <li>Cryptographic validation and raw validation codes.</li>
+          <li>Optional trust against an explicitly supplied local PEM snapshot.</li>
+          <li>Exact bytes or validated declared parent lineage between adjacent checkpoints.</li>
+          <li>A versioned repository policy mapped to stable exit codes.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>What the result cannot establish</h2>
+        <div class="callout danger">
+          <strong>Do not use this tool as an authenticity label.</strong>
+          It does not determine whether an image is true, authentic,
+          human-created, AI-generated, unmanipulated, correctly copyrighted, or
+          signed by an entity that deserves trust.
+        </div>
+        <ul>
+          <li>A present credential is not automatically valid.</li>
+          <li>A valid credential is not automatically trusted.</li>
+          <li>A trusted signer does not make every assertion factually true.</li>
+          <li>Credential absence does not prove manipulation or AI generation.</li>
+          <li>Byte inequality or perceptual similarity does not decide declared continuity.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>First observed interval semantics</h2>
+        <p>
+          The tool compares adjacent checkpoints in the exact user-supplied
+          order. It reports the first interval where the available evidence
+          changes in a policy-relevant way.
+        </p>
+        <div class="result">
+          <p class="result-label">Permitted claim</p>
+          <p>
+            “First observed break occurred between checkpoint
+            <code>build</code> and checkpoint <code>production</code>.”
+          </p>
+        </div>
+        <div class="result">
+          <p class="result-label">Unsupported claim without more evidence</p>
+          <p>
+            “The CDN stripped the credential.”
+          </p>
+        </div>
+        <p>
+          Naming a breaking component requires a supplied intermediate
+          checkpoint or a controlled integration test that isolates that
+          component.
+        </p>
+      </section>
+
+      <section>
+        <h2>Network and format limits</h2>
+        <ul>
+          <li>JPEG is the only supported media format in the MVP.</li>
+          <li>Remote manifest references are reported but not fetched or evaluated.</li>
+          <li>External assertions, remote ingredients, icons, and soft-binding recovery are not fetched.</li>
+          <li>SDK-controlled OCSP and arbitrary remote retrieval are disabled.</li>
+          <li>Public URL checkpoints are restricted to HTTPS on port 443 with destination and redirect checks.</li>
+          <li>The SDK is pre-1.0 and implements a subset of C2PA 2.4.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Privacy and operations</h2>
+        <p>
+          The project operates no hosted scanner, account system, analytics
+          endpoint, telemetry collector, or signing service. The GitHub Action
+          runs on the caller's runner. By default it uploads only the versioned
+          JSON result as a GitHub Actions artifact; this can be disabled.
+        </p>
+        <p>
+          URL query strings, raw assets, manifest bodies, EXIF data, and
+          credentials are not logged by the tool. Checkpoint names and
+          configured local path strings can appear in results, so users should
+          avoid sensitive naming.
+        </p>
+        <div class="actions">
+          <a
+            class="button secondary"
+            href="https://github.com/borborich/provenance-ci/blob/v0.1.1/docs/PRIVACY.md"
+          >Privacy details</a>
+          <a
+            class="button secondary"
+            href="https://github.com/borborich/provenance-ci/blob/v0.1.1/docs/THREAT_MODEL.md"
+          >Threat model</a>
+        </div>
+      </section>
+
+      <section>
+        <h2>Project status</h2>
+        <p>
+          The project is independent and uses the official CAI SDK behind an
+          adapter. It is not C2PA certified, compliant, conformant, affiliated,
+          or endorsed, and it does not use C2PA, CAI, Adobe, or Content
+          Credentials brand assets as its logo.
+        </p>
+        <div class="actions">
+          <a class="button" href="../guides/github-actions/">Try the GitHub Action</a>
+          <a
+            class="button secondary"
+            href="https://github.com/borborich/provenance-ci"
+          >Review the source</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Versioned source, fixtures, schemas, and security documentation are
+        available in the public repository.
+      </p>
+      <nav aria-label="Footer navigation">
+        <a href="../">Home</a>
+        <a href="../guides/find-c2pa-break/">Diagnosis guide</a>
+        <a href="https://github.com/borborich/provenance-ci">Source</a>
+      </nav>
+    </footer>
+  </body>
+</html>

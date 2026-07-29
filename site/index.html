@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Provenance CI — C2PA Content Credentials checkpoint testing</title>
+    <meta
+      name="description"
+      content="Open-source Rust CLI and GitHub Action for C2PA Content Credentials regression testing across ordered JPEG publishing checkpoints."
+    >
+    <link rel="canonical" href="https://borborich.github.io/provenance-ci/">
+    <link rel="stylesheet" href="styles.css">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Provenance CI — find the first observed C2PA continuity break">
+    <meta
+      property="og:description"
+      content="Validate C2PA Content Credentials across source, build, CMS, origin, and CDN checkpoints without uploading user assets."
+    >
+    <meta property="og:url" content="https://borborich.github.io/provenance-ci/">
+    <meta
+      property="og:image"
+      content="https://borborich.github.io/provenance-ci/og.png"
+    >
+    <meta property="og:image:width" content="1730">
+    <meta property="og:image:height" content="909">
+    <meta
+      property="og:image:alt"
+      content="Provenance CI checkpoint pipeline from source to an observed production break"
+    >
+    <meta name="twitter:card" content="summary_large_image">
+    <meta
+      name="twitter:image"
+      content="https://borborich.github.io/provenance-ci/og.png"
+    >
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        "name": "Provenance CI",
+        "description": "Open-source Rust CLI and GitHub Action for C2PA Content Credentials regression and continuity testing across ordered JPEG publishing checkpoints.",
+        "codeRepository": "https://github.com/borborich/provenance-ci",
+        "programmingLanguage": "Rust",
+        "license": [
+          "https://spdx.org/licenses/MIT.html",
+          "https://spdx.org/licenses/Apache-2.0.html"
+        ],
+        "version": "0.1.1",
+        "url": "https://borborich.github.io/provenance-ci/"
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <nav class="nav" aria-label="Primary navigation">
+        <a class="brand" href="./">
+          <span class="brand-mark" aria-hidden="true">P/CI</span>
+          <span>Provenance CI</span>
+        </a>
+        <div class="nav-links">
+          <a href="#how-it-works">How it works</a>
+          <a href="guides/find-c2pa-break/">Diagnosis guide</a>
+          <a href="concepts/validation-dimensions/">Concepts</a>
+          <a href="https://github.com/borborich/provenance-ci">GitHub</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="page" id="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <div>
+          <p class="eyebrow">Open-source Rust CLI + GitHub Action</p>
+          <h1 id="hero-title">Find the first observed C2PA continuity break.</h1>
+          <p class="lede">
+            Validate C2PA Content Credentials across the JPEG checkpoints you
+            supply—from source and build output to origin and CDN—and produce
+            reproducible CI evidence without uploading assets to a service.
+          </p>
+          <div class="actions">
+            <a
+              class="button"
+              href="https://github.com/marketplace/actions/provenance-ci-checkpoint-validator"
+            >Use the GitHub Action</a>
+            <a class="button secondary" href="guides/github-actions/">Read the quickstart</a>
+          </div>
+        </div>
+
+        <div class="hero-panel" aria-label="Example checkpoint result">
+          <div class="status">
+            <span>signed-source-to-derived</span>
+            <strong>policy fail</strong>
+          </div>
+          <div class="terminal">
+            <div class="terminal-row">
+              <span>source</span><span>present · valid</span>
+            </div>
+            <div class="terminal-row">
+              <span>build</span><span>declared derivative</span>
+            </div>
+            <div class="terminal-row break">
+              <span>production</span><span>credentials lost</span>
+            </div>
+            <p class="break-statement">
+              First observed break: build → production
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="how-it-works">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Ordered evidence</p>
+            <h2>Observe the pipeline you actually ship.</h2>
+          </div>
+          <p>
+            A source file and final URL can show that something changed, but
+            not where the first observed change appeared. Add intermediate
+            checkpoints to narrow the interval—without claiming to identify an
+            unobserved component.
+          </p>
+        </div>
+        <div class="pipeline" aria-label="Example ordered checkpoint sequence">
+          <div class="pipeline-step">source</div>
+          <div class="pipeline-step">build</div>
+          <div class="pipeline-step">CMS</div>
+          <div class="pipeline-step">optimizer</div>
+          <div class="pipeline-step">origin</div>
+          <div class="pipeline-step observed">CDN</div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Five dimensions</p>
+            <h2>Keep different questions separate.</h2>
+          </div>
+          <p>
+            Provenance CI does not collapse credential presence, cryptographic
+            validation, trust, continuity, and policy into one misleading
+            “authentic” label.
+          </p>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <span class="number">01 / presence</span>
+            <h3>Is a credential present?</h3>
+            <p>Absence is recorded as evidence, not as proof that content is false or AI-generated.</p>
+          </article>
+          <article class="card">
+            <span class="number">02 / cryptography</span>
+            <h3>Does validation succeed?</h3>
+            <p>The official CAI C2PA SDK performs parsing and validation behind a narrow adapter.</p>
+          </article>
+          <article class="card">
+            <span class="number">03 / trust</span>
+            <h3>Was trust checked?</h3>
+            <p>Trust requires an explicitly supplied, pinned local PEM snapshot. Otherwise it is not checked.</p>
+          </article>
+          <article class="card">
+            <span class="number">04 / continuity</span>
+            <h3>How does this checkpoint relate?</h3>
+            <p>Exact bytes and validated declared parent lineage are distinct forms of continuity evidence.</p>
+          </article>
+          <article class="card">
+            <span class="number">05 / policy</span>
+            <h3>What does your CI require?</h3>
+            <p>Versioned policy maps evidence to pass, warning, deterministic failure, or inconclusive status.</p>
+          </article>
+          <article class="card">
+            <span class="number">scope / v0.1.1</span>
+            <h3>Local JPEG validation</h3>
+            <p>No signing keys, user accounts, hosted scanner, remote manifest retrieval, or asset telemetry.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Five-minute start</p>
+            <h2>Add a checkpoint test to GitHub Actions.</h2>
+          </div>
+          <p>
+            The Action needs only read access to repository contents. Assets
+            remain on the caller's runner; the optional uploaded artifact is
+            the versioned JSON evidence result.
+          </p>
+        </div>
+        <pre><code>permissions:
+  contents: read
+
+steps:
+  - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+  - uses: borborich/provenance-ci@v0.1.1
+    with:
+      config: provenance-ci.yml</code></pre>
+        <div class="actions">
+          <a class="button secondary" href="guides/github-actions/">Configuration walkthrough</a>
+          <a
+            class="button secondary"
+            href="https://github.com/borborich/provenance-ci/tree/v0.1.1/examples"
+          >Versioned examples</a>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Practical references</p>
+            <h2>Answer the implementation question directly.</h2>
+          </div>
+          <p>
+            These guides are designed for developers—and for search-backed
+            assistants retrieving a precise, citable answer with commands,
+            evidence, and limitations.
+          </p>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <a class="guide-link" href="guides/find-c2pa-break/">
+              <span class="number">Guide 01</span>
+              <h3>Find where C2PA credentials are first observed to break</h3>
+              <p>A reproducible source → build → production example using committed fixtures.</p>
+              <span class="arrow">Read guide →</span>
+            </a>
+          </article>
+          <article class="card">
+            <a class="guide-link" href="guides/github-actions/">
+              <span class="number">Guide 02</span>
+              <h3>Validate Content Credentials in GitHub Actions</h3>
+              <p>A minimal workflow, versioned configuration, exit codes, and artifacts.</p>
+              <span class="arrow">Read guide →</span>
+            </a>
+          </article>
+          <article class="card">
+            <a class="guide-link" href="concepts/validation-dimensions/">
+              <span class="number">Concept 01</span>
+              <h3>Present, valid, trusted, continuous, and allowed are different</h3>
+              <p>Why a useful C2PA CI result must not collapse five dimensions.</p>
+              <span class="arrow">Read concept →</span>
+            </a>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="callout warning">
+          <strong>What this tool does not prove</strong>
+          Provenance CI does not determine whether an image is true, authentic,
+          human-created, AI-generated, unmanipulated, correctly copyrighted, or
+          signed by an entity that deserves trust. It reports evidence
+          available at the supplied checkpoints and explicitly records
+          limitations.
+        </div>
+        <div class="actions">
+          <a class="button secondary" href="limitations/">Read all limitations</a>
+          <a
+            class="button secondary"
+            href="https://github.com/borborich/provenance-ci/blob/main/docs/PRIVACY.md"
+          >Privacy and data flow</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Provenance CI is an independent open-source project. It is not
+        affiliated with or endorsed by C2PA, the Content Authenticity
+        Initiative, Adobe, or any other vendor.
+      </p>
+      <nav aria-label="Footer navigation">
+        <a href="https://github.com/borborich/provenance-ci">Source</a>
+        <a href="https://github.com/borborich/provenance-ci/releases/tag/v0.1.1">Release</a>
+        <a href="limitations/">Limitations</a>
+      </nav>
+    </footer>
+  </body>
+</html>

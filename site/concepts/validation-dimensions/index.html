@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>C2PA present vs valid vs trusted vs continuous vs allowed</title>
+    <meta
+      name="description"
+      content="Understand why C2PA credential presence, cryptographic validation, trust, checkpoint continuity, and CI policy are five separate dimensions."
+    >
+    <link
+      rel="canonical"
+      href="https://borborich.github.io/provenance-ci/concepts/validation-dimensions/"
+    >
+    <link rel="stylesheet" href="../../styles.css">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="C2PA present, valid, trusted, continuous, and allowed are different">
+    <meta
+      property="og:description"
+      content="A precise model for interpreting Content Credentials in a publishing pipeline."
+    >
+    <meta
+      property="og:url"
+      content="https://borborich.github.io/provenance-ci/concepts/validation-dimensions/"
+    >
+    <meta
+      property="og:image"
+      content="https://borborich.github.io/provenance-ci/og.png"
+    >
+    <meta
+      property="og:image:alt"
+      content="Provenance CI checkpoint pipeline from source to an observed production break"
+    >
+    <meta name="twitter:card" content="summary_large_image">
+    <meta
+      name="twitter:image"
+      content="https://borborich.github.io/provenance-ci/og.png"
+    >
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <nav class="nav" aria-label="Primary navigation">
+        <a class="brand" href="../../">
+          <span class="brand-mark" aria-hidden="true">P/CI</span>
+          <span>Provenance CI</span>
+        </a>
+        <div class="nav-links">
+          <a href="../../guides/find-c2pa-break/">Diagnosis guide</a>
+          <a href="../../guides/github-actions/">GitHub Actions</a>
+          <a href="../../limitations/">Limitations</a>
+          <a href="https://github.com/borborich/provenance-ci">GitHub</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="page article" id="main">
+      <header class="article-header">
+        <p class="eyebrow">Concepts</p>
+        <h1>Present, valid, trusted, continuous, and allowed are different</h1>
+        <p class="lede">
+          A useful C2PA CI result must not collapse distinct observations into
+          one “authentic” label. Provenance CI records five dimensions so a
+          policy decision can be explained and reproduced.
+        </p>
+        <div class="article-meta">
+          <span>Content Credentials</span>
+          <span>Publishing pipelines</span>
+          <span>Updated 2026-07-29</span>
+        </div>
+      </header>
+
+      <section>
+        <h2>Short answer</h2>
+        <p>
+          A JPEG may contain a credential whose cryptographic binding validates
+          while trust was never checked. A changed JPEG may still be a valid
+          declared derivative of the previous checkpoint. A technically valid
+          result may still fail a repository's policy. None of these states
+          establishes that the depicted content is true.
+        </p>
+      </section>
+
+      <section>
+        <h2>The five dimensions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th>Question answered</th>
+              <th>Question not answered</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Presence</td>
+              <td>Did the SDK find a Content Credential for these bytes?</td>
+              <td>Is the content true or false?</td>
+            </tr>
+            <tr>
+              <td>Cryptographic validation</td>
+              <td>Did the evaluated binding, signature, and referenced structures validate?</td>
+              <td>Does the signer deserve trust?</td>
+            </tr>
+            <tr>
+              <td>Trust</td>
+              <td>Did the signing chain validate against the explicitly supplied trust snapshot?</td>
+              <td>Is every assertion factually correct?</td>
+            </tr>
+            <tr>
+              <td>Continuity</td>
+              <td>Are adjacent checkpoints exact bytes or linked by validated declared parent evidence?</td>
+              <td>Which hidden component caused an observed break?</td>
+            </tr>
+            <tr>
+              <td>Policy</td>
+              <td>Does this evidence satisfy the repository's versioned CI requirements?</td>
+              <td>Is the content authentic, original, or lawful?</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Presence is not validation</h2>
+        <p>
+          A parseable manifest store can be present while its cryptographic
+          binding fails. Conversely, no credential may be present at all.
+          Provenance CI reports these states separately so “absent” is not
+          mislabeled as “invalid” and “present” is not mislabeled as “valid.”
+        </p>
+        <div class="callout warning">
+          <strong>Absence is a narrow observation.</strong>
+          It does not prove that an asset is manipulated, false, or
+          AI-generated.
+        </div>
+      </section>
+
+      <section>
+        <h2>Valid is not trusted</h2>
+        <p>
+          Cryptographic validation evaluates the credential and asset binding.
+          Trust additionally depends on a configured trust decision. Provenance
+          CI never downloads trust anchors implicitly: the user must supply a
+          pinned local PEM snapshot.
+        </p>
+        <pre><code>trust:
+  anchorsPath: ./C2PA-TRUST-LIST.pem
+  id: https://github.com/c2pa-org/conformance-public/commit/&lt;commit&gt;</code></pre>
+        <p>
+          If no snapshot is supplied, the result says
+          <code>not_checked</code>. This is deliberately different from
+          <code>untrusted</code>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Changed bytes do not automatically break continuity</h2>
+        <p>
+          Publishing transforms often change JPEG bytes. Byte inequality alone
+          cannot decide C2PA continuity. Provenance CI can report a valid
+          declared derivative only when the current valid manifest includes
+          validated parent evidence that matches the prior active manifest.
+        </p>
+        <div class="result">
+          <p class="result-label">Adjacent checkpoint examples</p>
+          <p><code>same bytes</code> → exact continuity evidence</p>
+          <p><code>changed bytes + validated parent</code> → declared derivative evidence</p>
+          <p><code>changed bytes + no verifiable parent</code> → changed without verifiable lineage</p>
+        </div>
+        <p>
+          Perceptual similarity is not substituted for declared C2PA lineage.
+        </p>
+      </section>
+
+      <section>
+        <h2>Continuity is not policy</h2>
+        <p>
+          Teams can require a credential, a valid binding, checked trust, or a
+          specific continuity relationship. The versioned policy converts
+          recorded evidence into a stable exit code without changing the
+          underlying observations.
+        </p>
+        <pre><code>policy:
+  requireCredential: true
+  requireValidBinding: true
+  requireTrusted: false
+  continuity: exact-or-declared-derivative
+  onInconclusive: warn</code></pre>
+      </section>
+
+      <section>
+        <h2>Truth is outside all five dimensions</h2>
+        <div class="callout danger">
+          <strong>C2PA is provenance metadata, not a truth oracle.</strong>
+          A valid and trusted Content Credential can provide tamper-evident
+          provenance statements and bindings. It does not independently prove
+          the factual truth of every assertion, authorship, copyright,
+          originality, or absence of manipulation.
+        </div>
+        <p>
+          Read the
+          <a
+            href="https://spec.c2pa.org/specifications/specifications/2.4/specs/C2PA_Specification.html"
+          >C2PA Technical Specification</a>
+          for the standard and the
+          <a href="https://github.com/contentauth/c2pa-rs">official CAI Rust SDK</a>
+          used behind the project adapter.
+        </p>
+      </section>
+
+      <section>
+        <h2>Use the model in CI</h2>
+        <div class="actions">
+          <a class="button" href="../../guides/github-actions/">GitHub Actions quickstart</a>
+          <a class="button secondary" href="../../guides/find-c2pa-break/">First-break guide</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Provenance CI reports evidence and limitations at supplied checkpoints.
+        It is not affiliated with or endorsed by C2PA, CAI, Adobe, or any vendor.
+      </p>
+      <nav aria-label="Footer navigation">
+        <a href="../../">Home</a>
+        <a href="../../limitations/">Limitations</a>
+        <a href="https://github.com/borborich/provenance-ci">Source</a>
+      </nav>
+    </footer>
+  </body>
+</html>

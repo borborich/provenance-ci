@@ -1,11 +1,16 @@
-# Provenance CI
+# Provenance CI — C2PA Content Credentials checkpoint testing
 
-Local-first CI regression and continuity testing for Content Credentials across
-ordered publishing checkpoints.
+Provenance CI is an open-source Rust CLI and GitHub Action for local-first
+regression and continuity testing of C2PA Content Credentials across ordered
+JPEG publishing checkpoints. It reports the first observed interval where
+credential presence, cryptographic validation, trust, declared continuity, or
+configured policy changes.
 
 > Project status: `v0.1.1` is the Marketplace release of the local JPEG
 > validator and GitHub Action, available from the
 > [GitHub Marketplace](https://github.com/marketplace/actions/provenance-ci-checkpoint-validator).
+> Practical guides are published at
+> [borborich.github.io/provenance-ci](https://borborich.github.io/provenance-ci/).
 > This project is not affiliated with or endorsed by C2PA, the Content
 > Authenticity Initiative, Adobe, or any other vendor. “Provenance CI” is a
 > working name only.

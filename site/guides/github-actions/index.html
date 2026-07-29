@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>C2PA Content Credentials validation with GitHub Actions</title>
+    <meta
+      name="description"
+      content="Add local-first C2PA Content Credentials checkpoint validation to GitHub Actions with a versioned YAML policy and JSON evidence output."
+    >
+    <link
+      rel="canonical"
+      href="https://borborich.github.io/provenance-ci/guides/github-actions/"
+    >
+    <link rel="stylesheet" href="../../styles.css">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="C2PA Content Credentials validation with GitHub Actions">
+    <meta
+      property="og:description"
+      content="A minimal, local-first GitHub Actions workflow for ordered JPEG publishing checkpoints."
+    >
+    <meta
+      property="og:url"
+      content="https://borborich.github.io/provenance-ci/guides/github-actions/"
+    >
+    <meta
+      property="og:image"
+      content="https://borborich.github.io/provenance-ci/og.png"
+    >
+    <meta
+      property="og:image:alt"
+      content="Provenance CI checkpoint pipeline from source to an observed production break"
+    >
+    <meta name="twitter:card" content="summary_large_image">
+    <meta
+      name="twitter:image"
+      content="https://borborich.github.io/provenance-ci/og.png"
+    >
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <nav class="nav" aria-label="Primary navigation">
+        <a class="brand" href="../../">
+          <span class="brand-mark" aria-hidden="true">P/CI</span>
+          <span>Provenance CI</span>
+        </a>
+        <div class="nav-links">
+          <a href="../find-c2pa-break/">Diagnosis guide</a>
+          <a href="../../concepts/validation-dimensions/">Concepts</a>
+          <a href="../../limitations/">Limitations</a>
+          <a href="https://github.com/borborich/provenance-ci">GitHub</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="page article" id="main">
+      <header class="article-header">
+        <p class="eyebrow">GitHub Actions quickstart</p>
+        <h1>Validate C2PA Content Credentials across publishing checkpoints</h1>
+        <p class="lede">
+          Add one versioned YAML file and one Action step. Provenance CI
+          validates ordered local-path and public-HTTPS JPEG checkpoints,
+          reports the first observed break, and keeps user assets on the
+          caller's runner.
+        </p>
+        <div class="article-meta">
+          <span>Provenance CI 0.1.1</span>
+          <span>GitHub-hosted or self-hosted runner</span>
+          <span>Updated 2026-07-29</span>
+        </div>
+      </header>
+
+      <section>
+        <h2>1. Add the checkpoint policy</h2>
+        <p>
+          Create <code>provenance-ci.yml</code> in your repository. Paths are
+          resolved relative to this configuration file.
+        </p>
+        <pre><code>version: 1
+
+checks:
+  - id: homepage-hero
+    checkpoints:
+      - name: source
+        path: assets/hero.jpg
+      - name: build
+        path: dist/hero.jpg
+      - name: production
+        url: https://example.com/images/hero.jpg
+    policy:
+      requireCredential: true
+      requireValidBinding: true
+      requireTrusted: false
+      continuity: exact-or-declared-derivative
+      onInconclusive: warn</code></pre>
+        <p>
+          The ordered list defines what the tool can observe. If a break is
+          first seen between <code>build</code> and <code>production</code>,
+          the result identifies only that interval.
+        </p>
+      </section>
+
+      <section>
+        <h2>2. Add the workflow step</h2>
+        <pre><code>name: C2PA checkpoint validation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  provenance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Validate C2PA Content Credentials
+        uses: borborich/provenance-ci@v0.1.1
+        with:
+          config: provenance-ci.yml</code></pre>
+        <p>
+          The release tag is immutable. For the strongest supply-chain pinning,
+          resolve <code>v0.1.1</code> and use its reviewed full commit SHA.
+          Direct Action dependencies inside Provenance CI are also pinned by
+          full SHA.
+        </p>
+      </section>
+
+      <section>
+        <h2>3. Interpret the result</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Exit</th>
+              <th>Meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>0</code></td>
+              <td>Configured policy passed or produced configured warnings.</td>
+            </tr>
+            <tr>
+              <td><code>2</code></td>
+              <td>Deterministic policy failure.</td>
+            </tr>
+            <tr>
+              <td><code>3</code></td>
+              <td>Infrastructure, acquisition, configuration, or unresolved inconclusive failure.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          Every checkpoint result records byte SHA-256, media type, size,
+          timestamp, SDK version, trust configuration, raw validation codes,
+          evidence, and limitations. URL results include the final redacted URL
+          where applicable.
+        </p>
+        <div class="callout">
+          <strong>Action output is evidence, not an authenticity verdict.</strong>
+          Presence, cryptographic validation, trust, continuity, and configured
+          policy remain separate fields.
+        </div>
+      </section>
+
+      <section>
+        <h2>Artifact and privacy controls</h2>
+        <p>
+          By default, the Action uploads the versioned JSON result as a GitHub
+          Actions artifact with 14-day retention. It does not upload raw user
+          assets to Provenance CI and the project operates no backend,
+          analytics endpoint, or telemetry collector.
+        </p>
+        <pre><code>- name: Validate without uploading the JSON artifact
+  uses: borborich/provenance-ci@v0.1.1
+  with:
+    config: provenance-ci.yml
+    upload-artifact: "false"</code></pre>
+        <p>
+          The Job Summary and annotations still expose checkpoint names and
+          validation outcomes to users who can read the workflow run. Choose
+          non-sensitive checkpoint names and review the
+          <a
+            href="https://github.com/borborich/provenance-ci/blob/v0.1.1/docs/PRIVACY.md"
+          >privacy and data-flow documentation</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Public URL checkpoints</h2>
+        <p>
+          URL checkpoints accept public HTTPS on port 443 or implicit port 443
+          only. Acquisition rejects credentials, private or reserved
+          destinations, redirects to disallowed destinations, non-JPEG
+          content, oversized bodies, and excessive redirects.
+        </p>
+        <ul>
+          <li>The user-declared top-level asset URL is the only remote content acquired.</li>
+          <li>SDK-controlled remote manifest and external assertion retrieval is disabled.</li>
+          <li>URL query strings are not persisted in results.</li>
+          <li>Trust material is never downloaded implicitly.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Optional pinned trust snapshot</h2>
+        <p>
+          Trust is not equivalent to cryptographic validation. To evaluate it,
+          pin a local PEM snapshot and record an immutable identifier:
+        </p>
+        <pre><code>trust:
+  anchorsPath: ./C2PA-TRUST-LIST.pem
+  id: https://github.com/c2pa-org/conformance-public/commit/&lt;commit&gt;</code></pre>
+        <p>
+          The result records the PEM SHA-256. Without
+          <code>anchorsPath</code>, trust is <code>not_checked</code>; the tool
+          does not silently call that state <code>untrusted</code>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Try the intentional regression locally</h2>
+        <pre><code>git clone --branch v0.1.1 --depth 1 \
+  https://github.com/borborich/provenance-ci.git
+cd provenance-ci
+
+cargo run --locked -- \
+  --config examples/provenance-ci.yml \
+  --output provenance-ci-result.json \
+  --markdown provenance-ci-summary.md</code></pre>
+        <div class="actions">
+          <a class="button" href="../find-c2pa-break/">Inspect the observed break</a>
+          <a
+            class="button secondary"
+            href="https://github.com/marketplace/actions/provenance-ci-checkpoint-validator"
+          >Open Marketplace</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Provenance CI is an independent open-source project. It is not
+        affiliated with or endorsed by C2PA, CAI, Adobe, or any vendor.
+      </p>
+      <nav aria-label="Footer navigation">
+        <a href="../../">Home</a>
+        <a href="../../limitations/">Limitations</a>
+        <a href="https://github.com/borborich/provenance-ci">Source</a>
+      </nav>
+    </footer>
+  </body>
+</html>

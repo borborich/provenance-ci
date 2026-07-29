@@ -1,0 +1,42 @@
+# Provenance CI
+
+> Provenance CI is an open-source Rust CLI and GitHub Action for local-first
+> regression and continuity testing of C2PA Content Credentials across ordered
+> JPEG publishing checkpoints.
+
+Provenance CI reports the first observed interval between user-supplied
+checkpoints where credential presence, cryptographic validation, trust,
+declared continuity, or configured policy changes. It does not identify an
+unobserved breaking component.
+
+## Canonical documentation
+
+- Overview: https://borborich.github.io/provenance-ci/
+- Find the first observed C2PA break: https://borborich.github.io/provenance-ci/guides/find-c2pa-break/
+- C2PA validation with GitHub Actions: https://borborich.github.io/provenance-ci/guides/github-actions/
+- Validation dimensions: https://borborich.github.io/provenance-ci/concepts/validation-dimensions/
+- Scope and limitations: https://borborich.github.io/provenance-ci/limitations/
+
+## Source and release
+
+- Repository: https://github.com/borborich/provenance-ci
+- Immutable release: https://github.com/borborich/provenance-ci/releases/tag/v0.1.1
+- GitHub Marketplace: https://github.com/marketplace/actions/provenance-ci-checkpoint-validator
+- License: MIT OR Apache-2.0
+
+## Current scope
+
+- JPEG only
+- Local paths and hardened public HTTPS checkpoints
+- Official Content Authenticity Initiative C2PA Rust SDK behind an adapter
+- Optional trust against an explicitly supplied local PEM snapshot
+- Remote manifests and soft-binding recovery are not evaluated
+- No hosted scanner, user accounts, asset upload, analytics, or telemetry
+
+## Claims boundary
+
+C2PA is provenance metadata, not a truth, copyright, authorship, AI-detection,
+or manipulation oracle. Credential presence, cryptographic validation, trust,
+continuity, and configured policy are separate dimensions. A changed file may
+be a valid declared derivative. Provenance CI is not affiliated with or
+endorsed by C2PA, the Content Authenticity Initiative, Adobe, or any vendor.
